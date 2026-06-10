@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "submission": {
+      "title": "Submission",
+      "description": "A client requirement submission",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["New", "In Progress", "Completed"]
+        },
+        "businessName": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "phone": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "websiteType": { "type": "string" },
+        "onlineOrdering": { "type": "boolean" },
+        "whatsappIntegration": { "type": "boolean" },
+        "googleMaps": { "type": "boolean" },
+        "colors": { "type": "string" },
+        "designStyle": { "type": "string" },
+        "exampleLinks": { "type": "string" },
+        "designNotes": { "type": "string" },
+        "logo": { "type": "string" },
+        "brandDescription": { "type": "string" },
+        "tagline": { "type": "string" },
+        "aboutBusiness": { "type": "string" },
+        "services": { "type": "string" },
+        "workingHours": { "type": "string" },
+        "socialMedia": { "type": "string" },
+        "specialFeatures": { "type": "string" },
+        "extraNotes": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["status", "businessName", "ownerName", "email", "createdAt"]
+    }
+  },
+  "firestore": {
+    "submissions/{submissionId}": {
+      "schema": "submission",
+      "description": "Client submissions"
+    }
+  }
+}

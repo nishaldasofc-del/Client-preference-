@@ -1,0 +1,6 @@
+{
+  "name": "Agency Requirements Dashboard",
+  "description": "Client Website Requirements Dashboard with Admin Panel, tailored for collecting and managing structured submissions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

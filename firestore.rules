@@ -1,0 +1,47 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() {
+      return isSignedIn() && (request.auth.token.email == "nixxal54@gmail.com" || exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+    }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+
+    function isValidSubmission(data) {
+      return data.keys().hasAll(['status', 'businessName', 'ownerName', 'email', 'createdAt']) &&
+        data.status in ['New', 'In Progress', 'Completed'] &&
+        data.businessName is string &&
+        data.ownerName is string &&
+        data.email is string &&
+        data.createdAt is string;
+    }
+
+    match /submissions/{submissionId} {
+      // Unauthenticated clients can create submissions
+      allow create: if isValidId(submissionId) && isValidSubmission(incoming());
+      
+      // Only admins can view, update, delete
+      allow get: if isAdmin();
+      allow list: if isAdmin();
+      allow delete: if isAdmin();
+      
+      allow update: if isAdmin() && isValidSubmission(incoming()) && (
+        incoming().diff(existing()).affectedKeys().hasOnly(['status']) ||
+        true // Allow admins to update anything if needed. Let's just say admins can do whatever if valid
+      );
+    }
+
+    match /admins/{userId} {
+      allow read: if isSignedIn();
+    }
+  }
+}
